@@ -1,0 +1,47 @@
+// 全局主题
+
+@charset 'utf-8';
+
+$light: (
+  primary: #1890ff,
+  primary_1: #ac8ece,
+  strong: #f7b157,
+  success: #41b782,
+  error: #e35966,
+  high_light: #f15a57,
+  warning: #fd8732,
+  pure: #fff,
+  dark: #000,
+  none: transparent,
+  bg: rgba(238, 241, 246, 1),
+  glass: rgba(238, 241, 246, 0.96),
+  ice: rgba(238, 241, 246, 0.6),
+  linear_primary: linear-gradient(to right, #0050b3 0%, #1890ff 100%),
+  linear_primary_2: linear-gradient(135deg, #ac8ece, #79589f),
+  linear_primary_1: linear-gradient(to right, #4481eb, #1890ff),
+  linear_grey: linear-gradient(to right, #e2ebf0 0%, #cfd9df 100%),
+  linear_strong: linear-gradient(to right, #f6d365 0%, #fda085 100%),
+  linear_success: linear-gradient(to right, #3cba92 0%, #0ba360 100%),
+  linear_error: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%),
+  linear_highlight: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%),
+  linear_warning: linear-gradient(to right, #f09819 0%, #ff5858 100%),
+  linear_pure: linear-gradient(to left, #fdfbfb 0%, #ebedee 100%),
+  linear_dark: linear-gradient(to right, rgba(0, 0, 0, 0.46) 0%, rgba(0, 0, 0, 0.85) 100%),
+  linear_background: linear-gradient(to right, rgba(121, 88, 159, 0.3), rgba(121, 88, 159, 0.1)),
+  primary_light_1: #40a9ff,
+  primary_light_2: #69c0ff,
+  primary_dark_1: #096dd9,
+  primary_dark_2: #0050b3,
+  grey_1: rgba(0, 0, 0, 0.02),
+  header grey_2: rgba(0, 0, 0, 0.04),
+  grey_3: rgba(0, 0, 0, 0.09),
+  grey_4: rgba(0, 0, 0, 0.15),
+  grey_5: rgba(0, 0, 0, 0.25),
+  shadw grey_6: rgba(0, 0, 0, 0.46),
+  grey_7: rgba(0, 0, 0, 0.65),
+  grey_8: rgba(0, 0, 0, 0.85)
+);
+
+$dark: ();
+
+$default: $light;

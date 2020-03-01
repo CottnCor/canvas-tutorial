@@ -1,0 +1,116 @@
+// 全局样式
+
+@charset 'utf-8';
+
+@import '../color/color';
+
+// size
+$size_max: 999rem;
+$size_960: 68.572rem; // 960px
+$size_640: 45.714rem; // 640px
+$size_540: 38.571rem; // 540px
+$size_420: 30rem; // 420px
+$size_360: 25.714rem; // 360px
+$size_300: 21.429rem; // 300px
+$size_240: 17.143rem; // 240px
+$size_180: 12.857rem; // 180px
+$size_160: 11.52rem; // 160px
+$size_120: 8.572rem; // 120px
+$size_108: 7.714rem; // 108px
+$size_96: 6.858rem; // 96px
+$size_84: 6rem; // 84px
+$size_72: 5.143rem; // 72px
+$size_64: 4.571rem; // 64px
+$size_60: 4.286rem; // 60px
+$size_48: 3.429rem; // 48px
+$size_42: 3rem; // 42px
+$size_36: 2.572rem; // 36px
+$size_32: 2.286rem; // 32px
+$size_30: 2.143rem; // 30px
+$size_28: 2rem; // 28px
+$size_24: 1.714rem; // 24px
+$size_22: 1.584rem; // 22px
+$size_20: 1.429rem; // 20px
+$size_18: 1.286rem; // 18px
+$size_16: 1.143rem; // 16px
+$size_15: 1.143rem; // 16px
+$size_14: 1.08rem; // 15px
+$size_12: 0.857rem; // 12px
+$size_10: 0.714rem; // 10px
+$size_9: 0.643rem; // 9px
+$size_8: 0.572rem; // 8px
+$size_7: 0.5rem; // 7px
+$size_6: 0.429rem; // 6px
+$size_5: 0.357rem; // 5px
+$size_4: 0.286rem; // 4px
+$size_3: 0.214rem; // 3px
+$size_2: 0.143rem; // 2px
+$size_1: 0.072rem; // 1px
+
+// animation
+$ease_in: 0.2s ease;
+$ease_quick: 0.2s ease;
+$ease_in_out: 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+$ease_flex: 1s cubic-bezier(1, 0.5, 0.8, 1);
+
+// z-index
+$zindex_affix: 10;
+$zindex_back-top: 101;
+$zindex_modal-mask: 1000;
+$zindex_modal: 1000;
+$zindex_notification: 1010;
+$zindex_message: 1010;
+$zindex_popover: 1030;
+$zindex_picker: 1050;
+$zindex_dropdown: 1050;
+$zindex_tooltip: 1060;
+
+// border
+$border_base: $size_1 solid map-get($default, grey_4);
+
+//shadow
+
+$shadow_base: 0 $size_1 $size_3 map-get($default, grey_5);
+
+$shadow_strong: 0 $size_6 $size_12 map-get($default, grey_5);
+
+$shadow_power: 0 $size_12 $size_24 map-get($default, grey_5);
+
+$shadow_base_inset: 0 $size_1 $size_3 0 map-get($default, grey_5) inset;
+
+$shadow_strong_inset: 0 $size_6 $size_12 0 map-get($default, grey_5) inset;
+
+$shadow_power_inset: 0 $size_12 $size_24 0 map-get($default, grey_5) inset;
+
+// 媒体查询断点
+$breakpoint: (
+  xs: 34.286rem,
+  // 480px
+    sm: 41.143rem,
+  // 576px
+    md: 54.857rem,
+  // 768px
+    lg: 70.857rem,
+  // 992px
+    xl: 85.714rem,
+  // 1200px
+    xxl: 114.286rem // 1600px
+);
+
+.shadow_base {
+  box-shadow: $shadow_base;
+}
+
+.shadow_strong {
+  box-shadow: $shadow_strong;
+}
+
+.shadow_power {
+  box-shadow: $shadow_power;
+}
+
+* {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

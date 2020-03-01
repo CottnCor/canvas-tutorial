@@ -1,0 +1,18 @@
+.wapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  main,
+  aside {
+    overflow: hidden;
+    min-height: 100vh;
+    max-height: 100vh;
+  }
+  main {
+    flex: 2;
+  }
+  aside {
+    flex: 1;
+  }
+}

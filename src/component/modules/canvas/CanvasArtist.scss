@@ -1,0 +1,26 @@
+.canvas-artist {
+  display: flex;
+  min-height: 100vh;
+  max-height: 100vh;
+  position: relative;
+  > * {
+    margin: auto;
+  }
+  .switch-wapper,
+  .slider-wapper {
+    padding: .5rem;
+    position: absolute;
+  }
+  .switch-wapper {
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .slider-wapper {
+    left: 50%;
+    bottom: 1rem;
+    width: 64%;
+    transform: translateX(-50%);
+  }
+}
