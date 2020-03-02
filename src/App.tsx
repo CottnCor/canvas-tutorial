@@ -7,12 +7,12 @@ interface State {
   size: { width: number; height: number } | null;
 }
 const App = class extends React.Component<Props, State> {
+  readonly state = {} as State;
   constructor(props: Props) {
     super(props);
     this.state = { size: null };
   }
   ready(size: { width: number; height: number }) {
-    debugger;
     this.setState({ size });
   }
   render() {

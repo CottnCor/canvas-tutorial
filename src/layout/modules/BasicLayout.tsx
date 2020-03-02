@@ -14,7 +14,6 @@ const BasicLayout = class extends React.Component<Props> {
   componentDidMount() {
     const width = this.main.current?.clientWidth || 0;
     const height = this.main.current?.clientHeight || 0;
-    debugger;
     this.props.ready({ width, height });
   }
   render() {

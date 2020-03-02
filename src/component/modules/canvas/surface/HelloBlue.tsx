@@ -5,6 +5,7 @@ interface Props {
 }
 interface State {}
 const HelloBlue = class extends React.Component<Props, State> {
+  readonly state = {} as State;
   private shaders: ShadersSheet;
   constructor(props: Props) {
     super(props);

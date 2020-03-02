@@ -11,6 +11,7 @@ interface State {
   kanojyo: string[];
 }
 const CanvasConfiguration = class extends React.Component<Props, State> {
+  readonly state = {} as State;
   constructor(props: Props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -89,7 +90,9 @@ const CanvasConfiguration = class extends React.Component<Props, State> {
             onChange={event => this.handleChange('tsuma', event)}
           >
             {this.requestKanojyo().map(item => (
-              <Option value={item.key}>{item.value}</Option>
+              <Option key={item.key} value={item.key}>
+                {item.value}
+              </Option>
             ))}
           </Select>
         </Form.Item>
@@ -101,7 +104,9 @@ const CanvasConfiguration = class extends React.Component<Props, State> {
             onChange={event => this.handleChange('kanojyo', event)}
           >
             {this.requestKanojyo().map(item => (
-              <Option value={item.key}>{item.value}</Option>
+              <Option key={item.key} value={item.key}>
+                {item.value}
+              </Option>
             ))}
           </Select>
         </Form.Item>
@@ -119,7 +124,9 @@ const CanvasConfiguration = class extends React.Component<Props, State> {
             onChange={event => this.handleChange('tsuma', event.target.value)}
           >
             {this.requestKanojyo().map(item => (
-              <Radio.Button value={item.key}>{item.value}</Radio.Button>
+              <Radio.Button key={item.key} value={item.key}>
+                {item.value}
+              </Radio.Button>
             ))}
           </Radio.Group>
         </Form.Item>
