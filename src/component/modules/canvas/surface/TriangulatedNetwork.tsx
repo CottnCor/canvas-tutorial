@@ -1,17 +1,18 @@
 import React from 'react';
+import { RotateDirection, RotateState } from '../interface-common.d';
 
 const defaultProps = {
-  rotationAngleSpeed: 1,
+  rotateState: { x: 0, y: 0, z: 0, rotateSpeed: 2, thinningRatio: 16 },
   size: { width: 600, height: 600 }
 };
 
 type Props = {
-  rotationAngleSpeed: number;
+  rotateState: RotateState;
   size: { width: number; height: number };
 } & Partial<typeof defaultProps>;
 
 interface State {
-  rotationAngleSpeed: number;
+  rotateState: RotateState;
 }
 
 interface Point {
@@ -31,16 +32,18 @@ interface PointMap {
 const TriangulatedNetwork = class extends React.Component<Props & typeof defaultProps, State> {
   readonly state = {} as State;
   static defaultProps = defaultProps;
+  private animationHandle: number;
   private ctx: CanvasRenderingContext2D | null | undefined;
   private triangulatedNetwork: React.RefObject<HTMLCanvasElement>;
-  private visual: { x: number; y: number; z: number };
+  private camera: { x: number; y: number; z: number };
   private pointList: PointList;
   private pointMap: PointMap;
   constructor(props: Props) {
     super(props);
     this.ctx = null;
+    this.animationHandle = Number.NaN;
     this.triangulatedNetwork = React.createRef();
-    this.visual = {
+    this.camera = {
       x: 0,
       y: 0,
       z: 300
@@ -69,10 +72,15 @@ const TriangulatedNetwork = class extends React.Component<Props & typeof default
     this.ctx = this.triangulatedNetwork.current?.getContext('2d');
     this.animationFrame();
   }
+  componentWillUnmount() {
+    if (!Number.isNaN(this.animationHandle)) {
+      window.cancelAnimationFrame(this.animationHandle);
+    }
+  }
   transformCoordinatePoint(point: Point, offsetX = this.props.size.width / 2, offsetY = this.props.size.height / 2) {
     return {
-      x: ((point.x - this.visual.x) * this.visual.z) / (this.visual.z - point.z) + offsetX,
-      y: ((point.y - this.visual.y) * this.visual.z) / (this.visual.z - point.z) + offsetY
+      x: ((point.x - this.camera.x) * this.camera.z) / (this.camera.z - point.z) + offsetX,
+      y: ((point.y - this.camera.y) * this.camera.z) / (this.camera.z - point.z) + offsetY
     };
   }
   draw() {
@@ -98,18 +106,18 @@ const TriangulatedNetwork = class extends React.Component<Props & typeof default
     }
   }
   animationFrame() {
-    window.requestAnimationFrame(() => {
+    this.animationHandle = window.requestAnimationFrame(() => {
       for (const key in this.pointList) {
         if (this.pointList.hasOwnProperty(key)) {
           const point = this.pointList[key as keyof PointList];
           const { x, y, z } = point;
           point.x =
-            x * Math.cos((this.props.rotationAngleSpeed / 180) * Math.PI) -
-            z * Math.sin((this.props.rotationAngleSpeed / 180) * Math.PI);
+            x * Math.cos((this.props.rotateState.rotateSpeed / 180) * Math.PI) -
+            z * Math.sin((this.props.rotateState.rotateSpeed / 180) * Math.PI);
           point.y = y;
           point.z =
-            z * Math.cos((this.props.rotationAngleSpeed / 180) * Math.PI) +
-            x * Math.sin((this.props.rotationAngleSpeed / 180) * Math.PI);
+            z * Math.cos((this.props.rotateState.rotateSpeed / 180) * Math.PI) +
+            x * Math.sin((this.props.rotateState.rotateSpeed / 180) * Math.PI);
         }
       }
       this.draw();

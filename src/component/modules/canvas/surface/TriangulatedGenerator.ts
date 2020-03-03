@@ -11,7 +11,7 @@ export interface IPoint {
 export interface IPolylineGenerator {
   pointList: IPoint[];
   computePointList(): void;
-  updatePointList(lineOffset: number, rotationAngleSpeed: number, visual: { x: number; y: number; z: number }): void;
+  updatePointList(lineOffset: number, rotateSpeed: number, camera: { x: number; y: number; z: number }): void;
 }
 export default class PolylineGenerator implements IPolylineGenerator {
   private a: number;
@@ -51,16 +51,16 @@ export default class PolylineGenerator implements IPolylineGenerator {
       });
     }
   }
-  updatePointList(lineOffset: number, rotationAngleSpeed: number, visual: { x: number; y: number; z: number }) {
+  updatePointList(lineOffset: number, rotateSpeed: number, camera: { x: number; y: number; z: number }) {
     this.pointList.forEach(item => {
       const x = item.x;
       const z = item.z;
       item.offset =lineOffset;
-      item.x = x * Math.cos((rotationAngleSpeed / 180) * Math.PI) - z * Math.sin((rotationAngleSpeed / 180) * Math.PI);
-      item.z = z * Math.cos((rotationAngleSpeed / 180) * Math.PI) + x * Math.sin((rotationAngleSpeed / 180) * Math.PI);
+      item.x = x * Math.cos((rotateSpeed / 180) * Math.PI) - z * Math.sin((rotateSpeed / 180) * Math.PI);
+      item.z = z * Math.cos((rotateSpeed / 180) * Math.PI) + x * Math.sin((rotateSpeed / 180) * Math.PI);
       item.y = this.a * Math.sin(((this.b * item.originX + this.c + item.offset) / 180) * Math.PI) + this.d;
-      item.canvasX = ((item.x - visual.x) * visual.z) / (visual.z - z);
-      item.canvasY = ((item.y - visual.y) * visual.z) / (visual.z - z);
+      item.canvasX = ((item.x - camera.x) * camera.z) / (camera.z - z);
+      item.canvasY = ((item.y - camera.y) * camera.z) / (camera.z - z);
     });
   }
 }

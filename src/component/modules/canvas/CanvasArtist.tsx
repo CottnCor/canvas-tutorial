@@ -1,12 +1,14 @@
 import './CanvasArtist.scss';
 import React from 'react';
+import { Slider, Radio } from 'antd';
+import { Surface } from 'gl-react-dom';
 import Cube from './surface/Cube';
 import HelloBlue from './surface/HelloBlue';
 import Polyline from './surface/Polyline';
 import PointCloud from './surface/PointCloud';
 import TriangulatedNetwork from './surface/TriangulatedNetwork';
-import { Slider, Radio } from 'antd';
-import { Surface } from 'gl-react-dom';
+import { RotateDirection, RotateState } from './interface-common.d';
+
 const defaultProps = {
   size: { width: 600, height: 600 }
 };
@@ -14,15 +16,24 @@ type Props = {
   size: { width: number; height: number };
 } & Partial<typeof defaultProps>;
 interface State {
-  speed: number;
   tsuma: string;
+  rotateState: RotateState;
 }
 const CanvasArtist = class extends React.Component<Props & typeof defaultProps, State> {
   readonly state = {} as State;
   static defaultProps = defaultProps;
   constructor(props: Props) {
     super(props);
-    this.state = { speed: 2, tsuma: 'Katou Megumi' };
+    this.state = {
+      tsuma: 'Katou Megumi',
+      rotateState: {
+        x: RotateDirection.Static,
+        y: RotateDirection.Static,
+        z: RotateDirection.Static,
+        rotateSpeed: 2,
+        thinningRatio: 16
+      }
+    };
   }
   requestMask() {
     return {
@@ -48,31 +59,62 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
       { key: 'Hashima Iori', value: 'Hashima Iori' }
     ];
   }
-  handleChange(key: keyof State, value: string | number) {
+  handleChange(key: keyof State, value: string | RotateState) {
     this.setState({
       [key]: value
     } as Pick<State, typeof key>);
   }
-  renderSurFace() {
-    if (this.state.tsuma === 'Katou Megumi') {
-      return <Cube rotationAngleSpeed={this.state.speed} size={this.props.size} />;
-    } else if (this.state.tsuma === 'Eriri Spencer Sawamura') {
-      return <Polyline lineOffset={6} rotationAngleSpeed={this.state.speed} size={this.props.size} />;
-    } else if (this.state.tsuma === 'Kasumigaoka Utaha') {
-      return <PointCloud lineOffset={0} rotationAngleSpeed={this.state.speed} size={this.props.size} />;
+  handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    const { width, height } = this.props.size;
+    const x = this.judgeTrisectorZone(width, event.clientX);
+    const y = this.judgeTrisectorZone(height, event.clientY);
+    const rotateState = { ...this.state.rotateState, ...{ x, y } };
+    this.setState({ rotateState });
+    console.log(`x: ${+this.state.rotateState.x}, y: ${+this.state.rotateState.y}, z: ${+this.state.rotateState.z}`);
+  }
+  judgeTrisectorZone(zone: number, droppoint: number) {
+    if (droppoint > 0 && droppoint < zone * (1 / 3)) {
+      return RotateDirection.Anticlockwise;
+    } else if (droppoint > zone * (1 / 3) && droppoint < zone * (2 / 3)) {
+      return RotateDirection.Static;
+    } else if (droppoint > zone * (2 / 3) && droppoint < zone) {
+      return RotateDirection.Clockwise;
     } else {
-      return <TriangulatedNetwork rotationAngleSpeed={this.state.speed} size={this.props.size} />;
+      return RotateDirection.Anticlockwise;
+    }
+  }
+  renderSilentDiv(className: string) {
+    return {
+      className: className,
+      onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.stopPropagation();
+      }
+    };
+  }
+  renderSlider() {
+    const marks = this.requestMask();
+    return { style: { color: '#fff' }, marks };
+  }
+  renderSurface() {
+    if (this.state.tsuma === 'Katou Megumi') {
+      return <Cube rotateState={this.state.rotateState} size={this.props.size} />;
+    } else if (this.state.tsuma === 'Eriri Spencer Sawamura') {
+      return <Polyline lineOffset={6} rotateState={this.state.rotateState} size={this.props.size} />;
+    } else if (this.state.tsuma === 'Kasumigaoka Utaha') {
+      return <PointCloud rotateState={this.state.rotateState} size={this.props.size} />;
+    } else {
+      return <TriangulatedNetwork rotateState={this.state.rotateState} size={this.props.size} />;
     }
   }
   render() {
     const { width, height } = this.props.size;
     return (
-      <div className="canvas-artist">
-        {this.renderSurFace()}
+      <div className="canvas-artist" onClick={this.handleClick.bind(this)}>
+        {this.renderSurface()}
         {/* <Surface width={width} height={height}>
-          <HelloBlue speed={this.state.speed} />
+          <HelloBlue rotateSpeed={this.state.rotateSpeed} />
         </Surface> */}
-        <div className={`switch-wapper`}>
+        <div {...this.renderSilentDiv('switch-wapper')}>
           <Radio.Group
             defaultValue={this.state.tsuma}
             value={this.state.tsuma}
@@ -85,14 +127,25 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
             ))}
           </Radio.Group>
         </div>
-        <div className="slider-wapper">
+        <div {...this.renderSilentDiv('thinning-slider')}>
           <Slider
-            style={{ color: '#fff' }}
-            className="xxx-slider"
-            marks={this.requestMask()}
-            defaultValue={this.state.speed * 10}
-            value={this.state.speed * 10}
-            onChange={event => this.handleChange('speed', +event / 10)}
+            vertical
+            {...this.renderSlider.apply(this)}
+            defaultValue={this.state.rotateState.thinningRatio}
+            value={this.state.rotateState.thinningRatio}
+            onChange={event =>
+              this.handleChange('rotateState', { ...this.state.rotateState, ...{ thinningRatio: +event } })
+            }
+          />
+        </div>
+        <div {...this.renderSilentDiv('rotate-speed-slider')}>
+          <Slider
+            {...this.renderSlider.apply(this)}
+            defaultValue={this.state.rotateState.rotateSpeed * 10}
+            value={this.state.rotateState.rotateSpeed * 10}
+            onChange={event =>
+              this.handleChange('rotateState', { ...this.state.rotateState, ...{ rotateSpeed: +event / 10 } })
+            }
           />
         </div>
       </div>

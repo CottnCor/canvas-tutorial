@@ -1,41 +1,44 @@
 import React from 'react';
 import PolylineGenerator, { IPolylineGenerator } from './PolylineGenerator';
+import { RotateDirection, RotateState } from '../interface-common.d';
 
 const defaultProps = {
   lineOffset: 0,
-  rotationAngleSpeed: 1,
+  rotateState: { x: 0, y: 0, z: 0, rotateSpeed: 2, thinningRatio: 16 },
   size: { width: 600, height: 600 }
 };
 
 type Props = {
   lineOffset: number;
-  rotationAngleSpeed: number;
+  rotateState: RotateState;
   size: { width: number; height: number };
 } & Partial<typeof defaultProps>;
 
 interface State {
   lineOffset: number;
-  rotationAngleSpeed: number;
+  rotateState: RotateState;
 }
 
 const Polyline = class extends React.Component<Props & typeof defaultProps, State> {
   readonly state = {} as State;
   static defaultProps = defaultProps;
+  private animationHandle: number;
   private ctx: CanvasRenderingContext2D | null | undefined;
   private wave: React.RefObject<HTMLCanvasElement>;
-  private visual: { x: number; y: number; z: number };
+  private camera: { x: number; y: number; z: number };
   private polylineList: IPolylineGenerator[];
   constructor(props: Props) {
     super(props);
     this.ctx = null;
     this.wave = React.createRef();
-    this.visual = {
+    this.camera = {
       x: 0,
       y: -100,
       z: 600
     };
-    const { lineOffset, rotationAngleSpeed } = this.props;
-    this.state = { lineOffset, rotationAngleSpeed };
+    this.animationHandle = Number.NaN;
+    const { lineOffset, rotateState } = this.props;
+    this.state = { lineOffset, rotateState };
     this.polylineList = [
       new PolylineGenerator(10, 2, 0, 0, -150, -200, 200, 10),
       new PolylineGenerator(10, 2, 0, 0, -120, -200, 200, 10),
@@ -52,8 +55,12 @@ const Polyline = class extends React.Component<Props & typeof defaultProps, Stat
   }
   componentDidMount() {
     this.ctx = this.wave.current?.getContext('2d');
-    this.draw();
     this.animationFrame();
+  }
+  componentWillUnmount() {
+    if (!Number.isNaN(this.animationHandle)) {
+      window.cancelAnimationFrame(this.animationHandle);
+    }
   }
   draw() {
     if (this.ctx) {
@@ -62,7 +69,7 @@ const Polyline = class extends React.Component<Props & typeof defaultProps, Stat
         polyline.pointList.forEach(point => {
           if (this.ctx) {
             this.ctx.beginPath();
-            const pointSize = (2 * this.visual.z) / (this.visual.z - point.z);
+            const pointSize = (2 * this.camera.z) / (this.camera.z - point.z);
             this.ctx.arc(
               point.canvasX + this.props.size.width / 2,
               point.canvasY + this.props.size.height / 3,
@@ -78,13 +85,13 @@ const Polyline = class extends React.Component<Props & typeof defaultProps, Stat
     }
   }
   animationFrame() {
-    window.requestAnimationFrame(() => {
-      this.polylineList.forEach((polyline, index) => {
-        const lineOffset = this.state.lineOffset;
-        polyline.updatePointList(lineOffset, this.state.rotationAngleSpeed, this.visual);
-      });
+    this.animationHandle = window.requestAnimationFrame(() => {
       const { lineOffset } = this.state;
       this.setState({ lineOffset: lineOffset + 2 });
+      this.polylineList.forEach((polyline, index) => {
+        const lineOffset = this.state.lineOffset;
+        polyline.updatePointList(lineOffset, this.state.rotateState.rotateSpeed, this.camera);
+      });
       this.draw();
       this.animationFrame();
     });
