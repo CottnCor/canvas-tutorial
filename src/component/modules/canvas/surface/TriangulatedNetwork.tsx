@@ -30,8 +30,8 @@ interface PointMap {
 }
 
 const TriangulatedNetwork = class extends React.Component<Props & typeof defaultProps, State> {
-  readonly state = {} as State;
   static defaultProps = defaultProps;
+  readonly state = {} as State;
   private animationHandle: number;
   private ctx: CanvasRenderingContext2D | null | undefined;
   private triangulatedNetwork: React.RefObject<HTMLCanvasElement>;

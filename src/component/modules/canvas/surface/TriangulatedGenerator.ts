@@ -14,6 +14,7 @@ export interface IPolylineGenerator {
   updatePointList(lineOffset: number, rotateSpeed: number, camera: { x: number; y: number; z: number }): void;
 }
 export default class PolylineGenerator implements IPolylineGenerator {
+  public pointList: IPoint[];
   private a: number;
   private b: number;
   private c: number;
@@ -22,7 +23,6 @@ export default class PolylineGenerator implements IPolylineGenerator {
   private start: number;
   private end: number;
   private gap: number;
-  public pointList: IPoint[];
   constructor(a: number, b: number, c: number, d: number, z: number, start: number, end: number, gap: number) {
     this.a = a;
     this.b = b;

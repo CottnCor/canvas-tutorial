@@ -1,33 +1,33 @@
 .canvas-artist {
-  display: flex;
-  min-height: 100vh;
-  max-height: 100vh;
-  position: relative;
-  > * {
-    margin: auto;
-  }
-  .switch-wapper,
-  .thinning-slider,
-  .rotate-speed-slider {
-    padding: 0.5rem;
-    position: absolute;
-  }
-  .switch-wapper {
-    top: 1rem;
-    right: 1rem;
     display: flex;
-    flex-direction: column;
-  }
-  .thinning-slider {
-    top: 50%;
-    left: 1rem;
-    height: 64%;
-    transform: translateY(-50%);
-  }
-  .rotate-speed-slider {
-    left: 50%;
-    bottom: 1rem;
-    width: 64%;
-    transform: translateX(-50%);
-  }
+    min-height: 100vh;
+    max-height: 100vh;
+    position: relative;
+    > * {
+        margin: auto;
+    }
+    .switch-wapper,
+    .thinning-slider,
+    .rotate-speed-slider {
+        padding: 0.5rem;
+        position: absolute;
+    }
+    .switch-wapper {
+        top: 1rem;
+        right: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .thinning-slider {
+        top: 50%;
+        left: 1rem;
+        height: 64%;
+        transform: translateY(-50%);
+    }
+    .rotate-speed-slider {
+        left: 50%;
+        bottom: 1rem;
+        width: 64%;
+        transform: translateX(-50%);
+    }
 }

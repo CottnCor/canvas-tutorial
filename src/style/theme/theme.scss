@@ -84,33 +84,33 @@ $shadow_power_inset: 0 $size_12 $size_24 0 map-get($default, grey_5) inset;
 
 // 媒体查询断点
 $breakpoint: (
-  xs: 34.286rem,
-  // 480px
-    sm: 41.143rem,
-  // 576px
-    md: 54.857rem,
-  // 768px
-    lg: 70.857rem,
-  // 992px
-    xl: 85.714rem,
-  // 1200px
-    xxl: 114.286rem // 1600px
+    xs: 34.286rem,
+    // 480px
+        sm: 41.143rem,
+    // 576px
+        md: 54.857rem,
+    // 768px
+        lg: 70.857rem,
+    // 992px
+        xl: 85.714rem,
+    // 1200px
+        xxl: 114.286rem // 1600px
 );
 
 .shadow_base {
-  box-shadow: $shadow_base;
+    box-shadow: $shadow_base;
 }
 
 .shadow_strong {
-  box-shadow: $shadow_strong;
+    box-shadow: $shadow_strong;
 }
 
 .shadow_power {
-  box-shadow: $shadow_power;
+    box-shadow: $shadow_power;
 }
 
 * {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
