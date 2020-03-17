@@ -10,6 +10,7 @@ module.exports = {
     rules: {
         'no-var': 2,
         'no-empty': 1,
+        'no-debugger': 1,
         'spaced-comment': 1,
         'max-params': [0, 7],
         'no-return-assign': 1,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Shaders, ShadersSheet, Node, GLSL } from 'gl-react';
-import { RotateDirection, RotateState } from '../interface-common.d';
+import { RotateDirection, RotateState } from '../interface-common';
 interface Props {
     blue?: number;
 }

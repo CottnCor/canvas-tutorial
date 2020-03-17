@@ -6,8 +6,9 @@ import Cube from './surface/Cube';
 import HelloBlue from './surface/HelloBlue';
 import Polyline from './surface/Polyline';
 import PointCloud from './surface/PointCloud';
+import PointCloud3D from './surface/PointCloud3D';
 import TriangulatedNetwork from './surface/TriangulatedNetwork';
-import { RotateDirection, RotateState } from './interface-common.d';
+import { RotateDirection, RotateState } from './interface-common';
 
 const defaultProps = {
     size: { width: 600, height: 600 }
@@ -20,8 +21,8 @@ interface State {
     rotateState: RotateState;
 }
 const CanvasArtist = class extends React.Component<Props & typeof defaultProps, State> {
-  static defaultProps = defaultProps;
-  readonly state = {} as State;
+    static defaultProps = defaultProps;
+    readonly state = {} as State;
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -30,8 +31,8 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
                 x: RotateDirection.Static,
                 y: RotateDirection.Static,
                 z: RotateDirection.Static,
-                rotateSpeed: 2,
-                thinningRatio: 16
+                rotateSpeed: 1,
+                thinningRatio: 96
             }
         };
     }
@@ -111,6 +112,8 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
             );
         } else if (this.state.tsuma === 'Kasumigaoka Utaha') {
             return <PointCloud rotateState={this.state.rotateState} size={this.props.size} />;
+        } else if (this.state.tsuma === 'Hyodo Michiru') {
+            return <PointCloud3D rotateState={this.state.rotateState} size={this.props.size} />;
         } else {
             return (
                 <TriangulatedNetwork rotateState={this.state.rotateState} size={this.props.size} />

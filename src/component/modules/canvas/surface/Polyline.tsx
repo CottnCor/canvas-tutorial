@@ -1,6 +1,6 @@
 import React from 'react';
 import PolylineGenerator, { IPolylineGenerator } from './PolylineGenerator';
-import { RotateDirection, RotateState } from '../interface-common.d';
+import { RotateDirection, RotateState } from '../interface-common';
 
 const defaultProps = {
   lineOffset: 0,

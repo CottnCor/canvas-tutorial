@@ -30,16 +30,22 @@
         "typescript": "^3.8.3"
     },
     "devDependencies": {
+        "@types/d3": "^5.7.2",
         "@types/gl-react": "^3.15.2",
         "@types/gl-react-dom": "^3.15.3",
         "animated": "^0.2.2",
         "babel-eslint": "~10.0.3",
         "babel-plugin-import": "^1.13.0",
         "customize-cra": "^0.9.1",
+        "d3": "^5.15.0",
+        "d3-voronoi": "^1.1.4",
         "eslint-config-alloy": "^3.6.0",
         "gl-react": "^4.0.1",
         "gl-react-dom": "^4.0.1",
-        "react-app-rewired": "^2.1.5"
+        "react-app-rewired": "^2.1.5",
+        "three": "^0.114.0",
+        "three-orbitcontrols": "^2.110.3",
+        "three-transformcontrols": "^0.78.1"
     },
     "browserslist": {
         "production": [

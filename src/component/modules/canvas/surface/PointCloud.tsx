@@ -1,6 +1,8 @@
 import React from 'react';
+import { voronoi } from 'd3-voronoi';
+import { RotateState } from '../interface-common';
 import PointCloudGenerator, { IPointCloudGenerator } from './PointCloudGenerator';
-import { RotateDirection, RotateState } from '../interface-common.d';
+import { transformCoordinatePoint } from '../CanvasHelper';
 
 const defaultProps = {
     rotateState: { x: 0, y: 0, z: 0, rotateSpeed: 2, thinningRatio: 16 },
@@ -14,6 +16,12 @@ type Props = {
 
 interface State {
     rotateState: RotateState;
+}
+
+interface Point {
+    x: number;
+    y: number;
+    z: number;
 }
 
 const PointCloud = class extends React.Component<Props & typeof defaultProps, State> {
@@ -65,11 +73,44 @@ const PointCloud = class extends React.Component<Props & typeof defaultProps, St
             });
         }
     }
+    drawTriangulated() {
+        if (this.ctx) {
+            this.ctx.clearRect(0, 0, this.props.size.width, this.props.size.height);
+            let points: [number, number][] = this.pointCloud.points.map((item) => [item.x, item.y]);
+            let links = voronoi().links(points);
+            if (links.length > 0) {
+                this.ctx.beginPath();
+                let point = {} as Point;
+                let newPoint = {} as { x: number; y: number };
+                let offsetX = this.props.size.width / 2;
+                let offsetY = this.props.size.height / 2;
+                for (const link of links) {
+                    point = { x: link.source[0], y: link.source[1], z: 0 };
+                    newPoint = transformCoordinatePoint(point, offsetX, offsetY);
+                    this.ctx.moveTo(newPoint.x, newPoint.y);
+                    point = { x: link.target[0], y: link.target[1], z: 0 };
+                    newPoint = transformCoordinatePoint(point, offsetX, offsetY);
+                    this.ctx.lineTo(newPoint.x, newPoint.y);
+                }
+                this.ctx.stroke();
+            }
+        }
+    }
+    transformCoordinatePoint(
+        point: Point,
+        offsetX = this.props.size.width / 2,
+        offsetY = this.props.size.height / 2
+    ) {
+        return {
+            x: ((point.x - this.camera.x) * this.camera.z) / (this.camera.z - point.z) + offsetX,
+            y: ((point.y - this.camera.y) * this.camera.z) / (this.camera.z - point.z) + offsetY
+        };
+    }
     animationFrame() {
         this.animationHandle = window.requestAnimationFrame(() => {
             this.pointCloud.updatePoints(this.props.rotateState.thinningRatio);
             this.pointCloud.updatePointProjection(this.props.rotateState.rotateSpeed, this.camera);
-            this.draw();
+            this.drawTriangulated();
             this.animationFrame();
         });
     }

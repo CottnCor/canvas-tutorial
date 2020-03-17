@@ -1,5 +1,6 @@
 import React from 'react';
-import { RotateDirection, RotateState } from '../interface-common.d';
+import { RotateState } from '../interface-common';
+import { transformCoordinatePoint } from '../CanvasHelper';
 
 const defaultProps = {
     rotateState: { x: 0, y: 0, z: 0, rotateSpeed: 2, thinningRatio: 16 },
@@ -38,18 +39,12 @@ const Cube = class extends React.Component<Props & typeof defaultProps, State> {
     private animationHandle: number;
     private ctx: CanvasRenderingContext2D | null | undefined;
     private cube: React.RefObject<HTMLCanvasElement>;
-    private camera: { x: number; y: number; z: number };
     private pointMap: PointMap;
     constructor(props: Props) {
         super(props);
         this.ctx = null;
         this.animationHandle = Number.NaN;
         this.cube = React.createRef();
-        this.camera = {
-            x: 0,
-            y: 0,
-            z: 300
-        };
         this.pointMap = {
             A: { x: -50, y: 50, z: 50 },
             B: { x: -50, y: 50, z: -50 },
@@ -70,76 +65,68 @@ const Cube = class extends React.Component<Props & typeof defaultProps, State> {
             window.cancelAnimationFrame(this.animationHandle);
         }
     }
-    transformCoordinatePoint(
-        point: Point,
-        offsetX = this.props.size.width / 2,
-        offsetY = this.props.size.height / 2
-    ) {
-        return {
-            x: ((point.x - this.camera.x) * this.camera.z) / (this.camera.z - point.z) + offsetX,
-            y: ((point.y - this.camera.y) * this.camera.z) / (this.camera.z - point.z) + offsetY
-        };
-    }
     draw() {
+        let offsetX = this.props.size.width / 2;
+        let offsetY = this.props.size.height / 2;
         let point = {} as { x: number; y: number };
         if (this.ctx) {
             this.ctx.clearRect(0, 0, this.props.size.width, this.props.size.height);
             // 绘制矩形ABCD
             this.ctx.beginPath();
-            point = this.transformCoordinatePoint(this.pointMap.A);
+            point = transformCoordinatePoint(this.pointMap.A, offsetX, offsetY);
             this.ctx.moveTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.B);
+            point = transformCoordinatePoint(this.pointMap.B, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.C);
+            point = transformCoordinatePoint(this.pointMap.C, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.D);
+            point = transformCoordinatePoint(this.pointMap.D, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
             this.ctx.closePath();
             this.ctx.stroke();
             // 绘制矩形EFGH
             this.ctx.beginPath();
-            point = this.transformCoordinatePoint(this.pointMap.E);
+            point = transformCoordinatePoint(this.pointMap.E, offsetX, offsetY);
             this.ctx.moveTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.F);
+            point = transformCoordinatePoint(this.pointMap.F, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.G);
+            point = transformCoordinatePoint(this.pointMap.G, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.H);
+            point = transformCoordinatePoint(this.pointMap.H, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
             this.ctx.closePath();
             this.ctx.stroke();
             // 绘制直线AE
             this.ctx.beginPath();
-            point = this.transformCoordinatePoint(this.pointMap.A);
+            point = transformCoordinatePoint(this.pointMap.A, offsetX, offsetY);
             this.ctx.moveTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.E);
+            point = transformCoordinatePoint(this.pointMap.E, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
-            this.ctx.stroke();
             this.ctx.closePath();
+            this.ctx.stroke();
             // 绘制直线BF
             this.ctx.beginPath();
-            point = this.transformCoordinatePoint(this.pointMap.B);
+            point = transformCoordinatePoint(this.pointMap.B, offsetX, offsetY);
             this.ctx.moveTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.F);
+            point = transformCoordinatePoint(this.pointMap.F, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
-            this.ctx.stroke();
             this.ctx.closePath();
+            this.ctx.stroke();
             // 绘制直线CD
             this.ctx.beginPath();
-            point = this.transformCoordinatePoint(this.pointMap.C);
+            point = transformCoordinatePoint(this.pointMap.C, offsetX, offsetY);
             this.ctx.moveTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.G);
+            point = transformCoordinatePoint(this.pointMap.G, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
-            this.ctx.stroke();
             this.ctx.closePath();
+            this.ctx.stroke();
             // 绘制直线DH
             this.ctx.beginPath();
-            point = this.transformCoordinatePoint(this.pointMap.D);
+            point = transformCoordinatePoint(this.pointMap.D, offsetX, offsetY);
             this.ctx.moveTo(point.x, point.y);
-            point = this.transformCoordinatePoint(this.pointMap.H);
+            point = transformCoordinatePoint(this.pointMap.H, offsetX, offsetY);
             this.ctx.lineTo(point.x, point.y);
-            this.ctx.stroke();
             this.ctx.closePath();
+            this.ctx.stroke();
         }
     }
     animationFrame() {

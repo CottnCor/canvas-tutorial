@@ -1,5 +1,5 @@
 import React from 'react';
-import { RotateDirection, RotateState } from '../interface-common.d';
+import { RotateDirection, RotateState } from '../interface-common';
 
 const defaultProps = {
   rotateState: { x: 0, y: 0, z: 0, rotateSpeed: 2, thinningRatio: 16 },
