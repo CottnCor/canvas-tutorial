@@ -8,7 +8,8 @@ import Polyline from './surface/Polyline';
 import PointCloud from './surface/PointCloud';
 import PointCloud3D from './surface/PointCloud3D';
 import TriangulatedNetwork from './surface/TriangulatedNetwork';
-import { RotateDirection, RotateState } from './interface-common';
+import { RotateDirection } from '../../../interfaces/common/RotateDirection';
+import { IRotateState } from '../../../interfaces/common/IRotateState';
 
 const defaultProps = {
     size: { width: 600, height: 600 }
@@ -18,7 +19,7 @@ type Props = {
 } & Partial<typeof defaultProps>;
 interface State {
     tsuma: string;
-    rotateState: RotateState;
+    rotateState: IRotateState;
 }
 const CanvasArtist = class extends React.Component<Props & typeof defaultProps, State> {
     static defaultProps = defaultProps;
@@ -60,7 +61,7 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
             { key: 'Hashima Iori', value: 'Hashima Iori' }
         ];
     }
-    handleChange(key: keyof State, value: string | RotateState) {
+    handleChange(key: keyof State, value: string | IRotateState) {
         this.setState({
             [key]: value
         } as Pick<State, typeof key>);

@@ -16,6 +16,7 @@
         "@types/node": "^12.0.0",
         "@types/react": "^16.9.0",
         "@types/react-dom": "^16.9.0",
+        "@types/three": "^0.103.2",
         "@typescript-eslint/eslint-plugin": "^2.22.0",
         "@typescript-eslint/parser": "^2.22.0",
         "antd": "^4.0.1",
@@ -27,6 +28,7 @@
         "react": "^16.13.0",
         "react-dom": "^16.13.0",
         "react-scripts": "3.4.0",
+        "three-trackballcontrols-ts": "^0.2.1",
         "typescript": "^3.8.3"
     },
     "devDependencies": {
@@ -42,10 +44,9 @@
         "eslint-config-alloy": "^3.6.0",
         "gl-react": "^4.0.1",
         "gl-react-dom": "^4.0.1",
+        "math": "^0.0.3",
         "react-app-rewired": "^2.1.5",
-        "three": "^0.114.0",
-        "three-orbitcontrols": "^2.110.3",
-        "three-transformcontrols": "^0.78.1"
+        "three": "^0.114.0"
     },
     "browserslist": {
         "production": [

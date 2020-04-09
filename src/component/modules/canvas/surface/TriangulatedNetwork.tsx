@@ -1,5 +1,6 @@
 import React from 'react';
-import { RotateDirection, RotateState } from '../interface-common';
+import { RotateDirection } from '../../../../interfaces/common/RotateDirection';
+import { IRotateState } from '../../../../interfaces/common/IRotateState';
 
 const defaultProps = {
   rotateState: { x: 0, y: 0, z: 0, rotateSpeed: 2, thinningRatio: 16 },
@@ -7,12 +8,12 @@ const defaultProps = {
 };
 
 type Props = {
-  rotateState: RotateState;
+  rotateState: IRotateState;
   size: { width: number; height: number };
 } & Partial<typeof defaultProps>;
 
 interface State {
-  rotateState: RotateState;
+  rotateState: IRotateState;
 }
 
 interface Point {

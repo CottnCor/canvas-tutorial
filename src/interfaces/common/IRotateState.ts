@@ -1,10 +1,6 @@
-export enum RotateDirection {
-    Anticlockwise = -1,
-    Static = 0,
-    Clockwise = 1
-}
+import { RotateDirection } from './RotateDirection';
 
-export interface RotateState {
+export interface IRotateState {
     x: RotateDirection;
     y: RotateDirection;
     z: RotateDirection;

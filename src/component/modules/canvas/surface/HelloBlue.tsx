@@ -1,7 +1,7 @@
 import React from 'react';
 import { Shaders, ShadersSheet, Node, GLSL } from 'gl-react';
-import { RotateDirection, RotateState } from '../interface-common';
-interface Props {
+import { RotateDirection } from '../../../../interfaces/common/RotateDirection';
+import { IRotateState } from '../../../../interfaces/common/IRotateState';interface Props {
     blue?: number;
 }
 interface State {}

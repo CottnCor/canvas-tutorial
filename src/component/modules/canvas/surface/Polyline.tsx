@@ -1,6 +1,7 @@
 import React from 'react';
 import PolylineGenerator, { IPolylineGenerator } from './PolylineGenerator';
-import { RotateDirection, RotateState } from '../interface-common';
+import { RotateDirection } from '../../../../interfaces/common/RotateDirection';
+import { IRotateState } from '../../../../interfaces/common/IRotateState';
 
 const defaultProps = {
   lineOffset: 0,
@@ -10,13 +11,13 @@ const defaultProps = {
 
 type Props = {
   lineOffset: number;
-  rotateState: RotateState;
+  rotateState: IRotateState;
   size: { width: number; height: number };
 } & Partial<typeof defaultProps>;
 
 interface State {
   lineOffset: number;
-  rotateState: RotateState;
+  rotateState: IRotateState;
 }
 
 const Polyline = class extends React.Component<Props & typeof defaultProps, State> {

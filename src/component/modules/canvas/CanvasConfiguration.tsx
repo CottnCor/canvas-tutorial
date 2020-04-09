@@ -16,15 +16,15 @@ import {
 } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 interface Props {}
-interface State {
+interface IState {
     age: number;
     name: string;
     otaku: boolean;
     tsuma: string;
     kanojyo: string[];
 }
-const CanvasConfiguration = class extends React.Component<Props, State> {
-    readonly state = {} as State;
+const CanvasConfiguration = class extends React.Component<Props, IState> {
+    readonly state = {} as IState;
     constructor(props: Props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,10 +37,10 @@ const CanvasConfiguration = class extends React.Component<Props, State> {
             tsuma: 'Katou Megumi'
         };
     }
-    handleChange(key: keyof State, value: string | string[] | number | boolean | undefined) {
+    handleChange(key: keyof IState, value: string | string[] | number | boolean | undefined) {
         this.setState({
             [key]: value
-        } as Pick<State, typeof key>);
+        } as Pick<IState, typeof key>);
     }
     handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         console.log(this.state);

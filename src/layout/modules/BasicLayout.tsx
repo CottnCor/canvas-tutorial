@@ -21,7 +21,7 @@ const BasicLayout = class extends React.Component<Props> {
         return (
             <div className="wapper">
                 <main ref={this.main}>{main}</main>
-                <aside className="shadow_strong">{aside}</aside>
+                {/* <aside className="shadow_strong">{aside}</aside> */}
             </div>
         );
     }
