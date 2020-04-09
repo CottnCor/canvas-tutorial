@@ -41,6 +41,7 @@
         "customize-cra": "^0.9.1",
         "d3": "^5.15.0",
         "d3-voronoi": "^1.1.4",
+        "delaunay-triangulate": "^1.1.6",
         "eslint-config-alloy": "^3.6.0",
         "gl-react": "^4.0.1",
         "gl-react-dom": "^4.0.1",

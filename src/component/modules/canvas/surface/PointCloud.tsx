@@ -2,7 +2,6 @@ import React from 'react';
 import { voronoi } from 'd3-voronoi';
 import PointCloudGenerator, { IPointCloudGenerator } from './PointCloudGenerator';
 import { transformCoordinatePoint } from '../CanvasHelper';
-import { RotateDirection } from '../../../../interfaces/common/RotateDirection';
 import { IRotateState } from '../../../../interfaces/common/IRotateState';
 
 const defaultProps = {

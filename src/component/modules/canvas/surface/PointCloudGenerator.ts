@@ -21,7 +21,7 @@ export default class PointCloudGenerator implements IPointCloudGenerator {
         this.points = [];
         this.originPoints = [];
         // this.thinningRatio = thinningRatio;
-        this.thinningRatio = 999;
+        this.thinningRatio = 720;
         this.computePoints();
     }
     computePoints() {
@@ -35,10 +35,7 @@ export default class PointCloudGenerator implements IPointCloudGenerator {
                 canvasY: 0
             };
             this.originPoints.push(point);
-            // if (index % this.thinningRatio === 0) {
-            //     this.points.push(point);
-            // }
-            if (index % 24 === 0) {
+            if (index % this.thinningRatio === 0) {
                 this.points.push(point);
             }
         }
@@ -48,8 +45,7 @@ export default class PointCloudGenerator implements IPointCloudGenerator {
             this.points = [];
             this.thinningRatio = thinningRatio;
             this.points = this.originPoints.filter(
-                // (item, index) => index % this.thinningRatio === 0
-                (item, index) => index % 24 === 0
+                (item, index) => index % this.thinningRatio === 0
             );
         }
     }

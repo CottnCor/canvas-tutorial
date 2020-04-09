@@ -1,9 +1,7 @@
 import './CanvasArtist.scss';
 import React from 'react';
 import { Slider, Radio } from 'antd';
-import { Surface } from 'gl-react-dom';
 import Cube from './surface/Cube';
-import HelloBlue from './surface/HelloBlue';
 import Polyline from './surface/Polyline';
 import PointCloud from './surface/PointCloud';
 import PointCloud3D from './surface/PointCloud3D';
@@ -27,7 +25,7 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
     constructor(props: Props) {
         super(props);
         this.state = {
-            tsuma: 'Katou Megumi',
+            tsuma: 'Hyodo Michiru',
             rotateState: {
                 x: RotateDirection.Static,
                 y: RotateDirection.Static,
@@ -126,9 +124,6 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
         return (
             <div className="canvas-artist" onClick={this.handleClick.bind(this)}>
                 {this.renderSurface()}
-                {/* <Surface width={width} height={height}>
-          <HelloBlue rotateSpeed={this.state.rotateSpeed} />
-        </Surface> */}
                 <div {...this.renderSilentDiv('switch-wapper')}>
                     <Radio.Group
                         defaultValue={this.state.tsuma}
