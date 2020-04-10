@@ -28,9 +28,9 @@ export default class PointCloudGenerator implements IPointCloudGenerator {
         const points = PointGenerator();
         for (let index = points.length - 1; index > 0; index--) {
             const point = {
-                x: points[index][0] * 3000,
-                y: (points[index][1] - 0.1) * 3000,
-                z: points[index][2] * 3000,
+                x: points[index][0] * 200,
+                y: (points[index][1] - 0.1) * 200,
+                z: points[index][2] * 200,
                 canvasX: 0,
                 canvasY: 0
             };

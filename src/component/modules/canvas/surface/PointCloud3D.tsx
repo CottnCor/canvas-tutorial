@@ -49,7 +49,7 @@ const PointCloud3D = class extends React.Component<Props & typeof defaultProps, 
         super(props);
         this.container = React.createRef();
         this.mouse = new Vector2();
-        this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+        this.camera = new PerspectiveCamera(84, window.innerWidth / window.innerHeight, 1, 1000);
         this.scene = new Scene();
         this.renderer = new WebGLRenderer({ antialias: true });
         this.controls = new TrackballControls(Object.create(this.camera), this.renderer.domElement);
@@ -66,10 +66,12 @@ const PointCloud3D = class extends React.Component<Props & typeof defaultProps, 
         }
     }
     init() {
-        const light = new SpotLight(0xffffff, 1.5);
-        light.position.set(0, 500, 2000);
-        this.camera.position.z = 1000;
         this.scene.background = new Color(0xffffff);
+
+        this.camera.position.z = 36;
+
+        const light = new SpotLight(0xffffff, 1.5);
+        light.position.set(0, 100, 200);
         this.scene.add(light);
 
         console.log(`start: ${new Date().getSeconds()}`);
@@ -119,7 +121,7 @@ const PointCloud3D = class extends React.Component<Props & typeof defaultProps, 
         console.log(`renderer: ${new Date().getSeconds()}`);
     }
     initEndpoint(point: number[]) {
-        const sphereGeometry = new SphereGeometry(6, 20, 20);
+        const sphereGeometry = new SphereGeometry(0.2);
         const sphereMaterial = new MeshLambertMaterial({ color: 0xfd753a });
         const sphere = new Mesh(sphereGeometry, sphereMaterial);
         sphere.position.set(point[0], point[1], point[2]);
