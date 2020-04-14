@@ -1,9 +1,11 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 1.
 
-## Available Scripts
+``` shell
+yarn
+```
 
-In the project directory, you can run:
+### 2.
 
-### `yarn start`
-
-### `yarn build`
+``` shell
+yarn start
+```
