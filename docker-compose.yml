@@ -1,0 +1,11 @@
+version: '3'
+services:
+    canvas-tutorial:
+        image: nginx:latest
+        container_name: canvas-tutorial
+        ports:
+            - '80:80'
+            - '8099:8099'
+        volumes:
+            - ./build:/usr/share/nginx/html
+        command: /bin/bash -c "nginx -g 'daemon off;'"
