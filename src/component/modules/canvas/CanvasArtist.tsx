@@ -1,6 +1,7 @@
 import './CanvasArtist.scss';
 import React from 'react';
-import { Slider, Radio } from 'antd';
+import { Slider, Radio, Upload, Button, Input } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import Cube from './surface/Cube';
 import Polyline from './surface/Polyline';
 import PointCloud from './surface/PointCloud';
@@ -9,23 +10,27 @@ import TriangulatedNetwork from './surface/TriangulatedNetwork';
 import { RotateDirection } from '../../../interfaces/common/RotateDirection';
 import { IRotateState } from '../../../interfaces/common/IRotateState';
 
+import img_mesh from './faker/12381589003829_.pic_hd.jpg';
+
 const defaultProps = {
     size: { width: 600, height: 600 }
 };
-type Props = {
+type IProps = {
     size: { width: number; height: number };
 } & Partial<typeof defaultProps>;
-interface State {
+interface IState {
+    file?: File;
     tsuma: string;
     rotateState: IRotateState;
 }
-const CanvasArtist = class extends React.Component<Props & typeof defaultProps, State> {
+const CanvasArtist = class extends React.Component<IProps & typeof defaultProps, IState> {
+    private ref: React.RefObject<HTMLInputElement>;
     static defaultProps = defaultProps;
-    readonly state = {} as State;
-    constructor(props: Props) {
+    readonly state = {} as IState;
+    constructor(props: IProps) {
         super(props);
         this.state = {
-            tsuma: 'Hyodo Michiru',
+            tsuma: 'Katou Megumi',
             rotateState: {
                 x: RotateDirection.Static,
                 y: RotateDirection.Static,
@@ -34,6 +39,7 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
                 thinningRatio: 96
             }
         };
+        this.ref = React.createRef();
     }
     requestMask() {
         return {
@@ -51,18 +57,26 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
     }
     requestKanojyo() {
         return [
-            { key: 'Katou Megumi', value: 'Katou Megumi' },
-            { key: 'Eriri Spencer Sawamura', value: 'Eriri Spencer Sawamura' },
-            { key: 'Kasumigaoka Utaha', value: 'Kasumigaoka Utaha' },
-            { key: 'Hyodo Michiru', value: 'Hyodo Michiru' },
-            { key: 'Hashima Izumi', value: 'Hashima Izumi' },
-            { key: 'Hashima Iori', value: 'Hashima Iori' }
+            { key: 'Katou Megumi', value: '文件导入' },
+            { key: 'Eriri Spencer Sawamura', value: '散乱点云模型' },
+            { key: 'Kasumigaoka Utaha', value: '三角网格模型' }
+            // { key: 'Hyodo Michiru', value: 'Hyodo Michiru' },
+            // { key: 'Hashima Izumi', value: 'Hashima Izumi' },
+            // { key: 'Hashima Iori', value: 'Hashima Iori' }
         ];
     }
-    handleChange(key: keyof State, value: string | IRotateState) {
+    fileHandleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const files = this.ref.current
+            ? this.ref.current.files
+                ? this.ref.current.files
+                : []
+            : [];
+        files.length > 0 ? this.handleChange('file', files[0]) : this.handleChange('file', null);
+    }
+    handleChange(key: keyof IState, value: string | IRotateState | File | null) {
         this.setState({
             [key]: value
-        } as Pick<State, typeof key>);
+        } as Pick<IState, typeof key>);
     }
     handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         const { width, height } = this.props.size;
@@ -86,6 +100,16 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
             return RotateDirection.Anticlockwise;
         }
     }
+    renderUploadProps() {
+        return {
+            name: 'file',
+            action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+            headers: {
+                authorization: 'authorization-text'
+            },
+            onChange() {}
+        };
+    }
     renderSilentDiv(className: string) {
         return {
             className: className,
@@ -98,7 +122,8 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
         const marks = this.requestMask();
         return { style: { color: '#fff' }, marks };
     }
-    renderSurface() {
+    renderSurfaceCopy() {
+        const { file } = this.state;
         if (this.state.tsuma === 'Katou Megumi') {
             return <Cube rotateState={this.state.rotateState} size={this.props.size} />;
         } else if (this.state.tsuma === 'Eriri Spencer Sawamura') {
@@ -112,15 +137,24 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
         } else if (this.state.tsuma === 'Kasumigaoka Utaha') {
             return <PointCloud rotateState={this.state.rotateState} size={this.props.size} />;
         } else if (this.state.tsuma === 'Hyodo Michiru') {
-            return <PointCloud3D rotateState={this.state.rotateState} size={this.props.size} />;
+            return file ? <PointCloud3D file={file} size={this.props.size} /> : <div></div>;
         } else {
             return (
                 <TriangulatedNetwork rotateState={this.state.rotateState} size={this.props.size} />
             );
         }
     }
+    renderSurface() {
+        const { file } = this.state;
+        if (this.state.tsuma === 'Katou Megumi') {
+            return <img className="img-faker" />;
+        } else if (this.state.tsuma === 'Eriri Spencer Sawamura') {
+            return <img className="img-faker" />;
+        } else if (this.state.tsuma === 'Kasumigaoka Utaha') {
+            return <img className="img-faker" src={img_mesh} />;
+        }
+    }
     render() {
-        const { width, height } = this.props.size;
         return (
             <div className="canvas-artist" onClick={this.handleClick.bind(this)}>
                 {this.renderSurface()}
@@ -130,15 +164,23 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
                         value={this.state.tsuma}
                         onChange={(event) => this.handleChange('tsuma', event.target.value)}
                     >
-                        {this.requestKanojyo().map((item) => (
-                            <Radio.Button
-                                style={{ display: 'block' }}
-                                key={item.key}
-                                value={item.key}
-                            >
-                                {item.value}
-                            </Radio.Button>
-                        ))}
+                        {this.requestKanojyo().map((item) =>
+                            item.key !== '' ? (
+                                <Radio.Button
+                                    style={{ display: 'block' }}
+                                    key={item.key}
+                                    value={item.key}
+                                >
+                                    {item.value}
+                                </Radio.Button>
+                            ) : (
+                                <Upload {...this.renderUploadProps()}>
+                                    <Button>
+                                        <UploadOutlined /> 文件导入
+                                    </Button>
+                                </Upload>
+                            )
+                        )}
                     </Radio.Group>
                 </div>
                 <div {...this.renderSilentDiv('thinning-slider')}>
@@ -156,20 +198,15 @@ const CanvasArtist = class extends React.Component<Props & typeof defaultProps, 
                     />
                 </div>
                 <div {...this.renderSilentDiv('rotate-speed-slider')}>
-                    <Slider
-                        {...this.renderSlider.apply(this)}
-                        defaultValue={this.state.rotateState.rotateSpeed * 10}
-                        value={this.state.rotateState.rotateSpeed * 10}
-                        onChange={(event) =>
-                            this.handleChange('rotateState', {
-                                ...this.state.rotateState,
-                                ...{ rotateSpeed: +event / 10 }
-                            })
-                        }
-                    />
+                    {/* <input
+                        type="file"
+                        accept=".json"
+                        ref={this.ref}
+                        onChange={this.fileHandleChange.bind(this)}
+                    /> */}
                 </div>
             </div>
         );
     }
-} as React.ComponentClass<Props>;
+} as React.ComponentClass<IProps>;
 export default CanvasArtist;

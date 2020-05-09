@@ -1,8 +1,9 @@
 .canvas-artist {
     display: flex;
-    min-height: 100vh;
-    max-height: 100vh;
+    height: 100vh;
     position: relative;
+    background-repeat: round;
+    background-image: url('./faker/background-image.jpg');
     > * {
         margin: auto;
     }
@@ -29,5 +30,9 @@
         bottom: 1rem;
         width: 64%;
         transform: translateX(-50%);
+    }
+    .img-faker {
+        height: 100%;
+        width: auto;
     }
 }

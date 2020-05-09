@@ -2,10 +2,10 @@ import React from 'react';
 import * as triangulate from 'delaunay-triangulate';
 import { TrackballControls } from 'three-trackballcontrols-ts';
 import PointCloudGenerator, { IPointCloudGenerator } from './PointCloudGenerator';
-import { IRotateState } from '../../../../interfaces/common/IRotateState';
 import {
     Vector2,
     Vector3,
+    Face3,
     PerspectiveCamera,
     Scene,
     WebGLRenderer,
@@ -17,43 +17,46 @@ import {
     Color,
     SphereGeometry,
     MeshLambertMaterial,
-    Mesh
+    Mesh,
+    MeshBasicMaterial,
+    DoubleSide,
+    MultiMaterial,
+    Object3D
 } from 'three';
 
 const defaultProps = {
-    rotateState: { x: 0, y: 0, z: 0, rotateSpeed: 2, thinningRatio: 16 },
     size: { width: 600, height: 600 }
 };
 
-type Props = {
-    rotateState: IRotateState;
+interface IObject {
+    total: number;
+    type: 'node' | 'face';
+    points: number[][];
+    vertices?: number[][];
+}
+
+type IProps = {
+    file?: File;
     size: { width: number; height: number };
 } & Partial<typeof defaultProps>;
 
-interface State {
-    rotateState: IRotateState;
-}
-
-const PointCloud3D = class extends React.Component<Props & typeof defaultProps, State> {
+const PointCloud3D = class extends React.Component<IProps & typeof defaultProps, {}> {
     static defaultProps = defaultProps;
-    readonly state = {} as State;
     private container: React.RefObject<HTMLDivElement>;
     private camera: PerspectiveCamera;
     private controls: TrackballControls;
     private scene: Scene;
     private renderer: WebGLRenderer;
     private mouse: Vector2;
-    private pointCloud: IPointCloudGenerator;
     private animationHandle: number;
-    constructor(props: Props) {
+    constructor(props: IProps) {
         super(props);
         this.container = React.createRef();
         this.mouse = new Vector2();
-        this.camera = new PerspectiveCamera(84, window.innerWidth / window.innerHeight, 1, 1000);
         this.scene = new Scene();
         this.renderer = new WebGLRenderer({ antialias: true });
+        this.camera = new PerspectiveCamera(84, window.innerWidth / window.innerHeight, 1, 1000);
         this.controls = new TrackballControls(Object.create(this.camera), this.renderer.domElement);
-        this.pointCloud = new PointCloudGenerator(this.props.rotateState.thinningRatio);
         this.animationHandle = Number.NaN;
     }
     componentDidMount() {
@@ -66,39 +69,79 @@ const PointCloud3D = class extends React.Component<Props & typeof defaultProps, 
         }
     }
     init() {
-        this.scene.background = new Color(0xffffff);
-
-        this.camera.position.z = 36;
-
-        const light = new SpotLight(0xffffff, 1.5);
-        light.position.set(0, 100, 200);
-        this.scene.add(light);
-
-        console.log(`start: ${new Date().getSeconds()}`);
-
-        const points = this.pointCloud.points.map((point) => [point.x, point.y, point.z]);
-
-        const triangles = triangulate(points);
-
-        console.log(`triangles: ${new Date().getSeconds()}`);
-
-        console.log(`triangles: ${triangles}`);
-
-        triangles.forEach((triangle: number[]) => {
-            for (let i = 0; i < triangle.length; i++) {
-                let pointStart = points[triangle[i]];
-                let pointEnd = [] as number[];
-                if (i < triangle.length - 1) {
-                    pointEnd = points[triangle[i + 1]];
-                    this.scene.add(this.initLine(pointStart, pointEnd));
-                } else pointEnd = pointStart;
-                this.scene.add(this.initEndpoint(pointStart));
-                this.scene.add(this.initEndpoint(pointEnd));
-                this.scene.add(this.initLine(pointStart, pointEnd));
+        const { file } = this.props;
+        if (file) {
+            const $ = this;
+            const reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = function () {
+                if (this.result && typeof this.result === 'string') {
+                    const object: IObject = JSON.parse(this.result);
+                    if (object.type === 'node') {
+                        $.initNode(object.points);
+                    } else {
+                        if (object.vertices) {
+                            $.initFace(object.points, object.vertices);
+                        }
+                    }
+                }
+            };
+        }
+    }
+    initFace(points: number[][], vertices: number[][]) {
+        this.initEnvironment();
+        const geometry = new Geometry();
+        points.forEach((point) => {
+            geometry.vertices.push(new Vector3(...point));
+        });
+        vertices.forEach((vertex) => {
+            if (vertex.length >= 3) {
+                geometry.faces.push(new Face3(vertex[0], vertex[1], vertex[2]));
             }
         });
-
-        console.log(`initLine: ${new Date().getSeconds()}`);
+        const material = new MeshBasicMaterial({
+            vertexColors: true
+        });
+        const color1 = new Color(0x1d5575);
+        const color2 = new Color(0x1d5575);
+        geometry.colors.push(color1, color2);
+        this.scene.add(new Mesh(geometry, material));
+    }
+    initNode(points: number[][]) {
+        this.initEnvironment();
+        const sphereGroup = new Object3D();
+        const sphereGeometry = new SphereGeometry(0.4, 20, 20);
+        const sphereMaterial = new MeshLambertMaterial({ color: 0xff00ff });
+        const meshMaterial = new MeshLambertMaterial({ color: 0xffffff });
+        const sphere = new Mesh(sphereGeometry, sphereMaterial);
+        points.forEach((point) => {
+            const geometry = new SphereGeometry(0.2, 10, 10);
+            const mesh = new Mesh(geometry, meshMaterial);
+            mesh.position.copy(new Vector3(...Array.from(point)));
+            sphereGroup.add(mesh);
+        });
+        sphere.position.set(0, 0, 0);
+        this.scene.add(sphere);
+        this.scene.add(sphereGroup);
+    }
+    initLine(pointA: number[], pointB: number[]) {
+        const geometry = new Geometry();
+        const material = new LineBasicMaterial({ vertexColors: true });
+        const color1 = new Color(0x1d5575);
+        const color2 = new Color(0x1d5575);
+        const p1 = new Vector3(...Array.from(pointA));
+        const p2 = new Vector3(...Array.from(pointB));
+        geometry.vertices.push(p1);
+        geometry.vertices.push(p2);
+        geometry.colors.push(color1, color2);
+        return new Line(geometry, material, LinePieces);
+    }
+    initEnvironment() {
+        const light = new SpotLight(0xffffff, 1.5);
+        this.scene.background = new Color(0xffffff);
+        this.camera.position.z = 36;
+        light.position.set(0, 100, 200);
+        this.scene.add(light);
 
         this.renderer = new WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -117,27 +160,6 @@ const PointCloud3D = class extends React.Component<Props & typeof defaultProps, 
         this.renderer.domElement.addEventListener('mousemove', (e: MouseEvent) => {
             this.onMouseMove(e);
         });
-
-        console.log(`renderer: ${new Date().getSeconds()}`);
-    }
-    initEndpoint(point: number[]) {
-        const sphereGeometry = new SphereGeometry(0.2);
-        const sphereMaterial = new MeshLambertMaterial({ color: 0xfd753a });
-        const sphere = new Mesh(sphereGeometry, sphereMaterial);
-        sphere.position.set(point[0], point[1], point[2]);
-        return sphere;
-    }
-    initLine(pointA: number[], pointB: number[]) {
-        const geometry = new Geometry();
-        const material = new LineBasicMaterial({ vertexColors: true });
-        const color1 = new Color(0x1d5575);
-        const color2 = new Color(0x1d5575);
-        const p1 = new Vector3(...Array.from(pointA));
-        const p2 = new Vector3(...Array.from(pointB));
-        geometry.vertices.push(p1);
-        geometry.vertices.push(p2);
-        geometry.colors.push(color1, color2);
-        return new Line(geometry, material, LinePieces);
     }
     onMouseMove(e: MouseEvent) {
         this.mouse.x = e.clientX;
@@ -158,6 +180,6 @@ const PointCloud3D = class extends React.Component<Props & typeof defaultProps, 
         const { size } = this.props;
         return <div ref={this.container} style={{ width: size.width, height: size.height }} />;
     }
-} as React.ComponentClass<Props>;
+} as React.ComponentClass<IProps>;
 
 export default PointCloud3D;

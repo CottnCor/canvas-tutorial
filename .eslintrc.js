@@ -10,7 +10,7 @@ module.exports = {
     rules: {
         'no-var': 2,
         'no-empty': 1,
-        'complexity': 0,
+        complexity: 0,
         'no-debugger': 1,
         'max-depth': 0,
         'spaced-comment': 1,
@@ -28,6 +28,7 @@ module.exports = {
         '@typescript-eslint/member-ordering': 0,
         'no-unused-expressions': 0,
         '@typescript-eslint/prefer-for-of': 0,
-        '@typescript-eslint/no-unused-expressions': 0
+        '@typescript-eslint/no-unused-expressions': 0,
+        '@typescript-eslint/no-this-alias': 0
     }
 };
