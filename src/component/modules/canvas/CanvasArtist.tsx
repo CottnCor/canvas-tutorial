@@ -10,7 +10,8 @@ import TriangulatedNetwork from './surface/TriangulatedNetwork';
 import { RotateDirection } from '../../../interfaces/common/RotateDirection';
 import { IRotateState } from '../../../interfaces/common/IRotateState';
 
-import img_mesh from './faker/12381589003829_.pic_hd.jpg';
+import img_mesh from './faker/13671589020006_.pic.jpg';
+import img_point from './faker/13681589020007_.pic.jpg';
 
 const defaultProps = {
     size: { width: 600, height: 600 }
@@ -149,7 +150,7 @@ const CanvasArtist = class extends React.Component<IProps & typeof defaultProps,
         if (this.state.tsuma === 'Katou Megumi') {
             return <img className="img-faker" />;
         } else if (this.state.tsuma === 'Eriri Spencer Sawamura') {
-            return <img className="img-faker" />;
+            return <img className="img-faker" src={img_point} />;
         } else if (this.state.tsuma === 'Kasumigaoka Utaha') {
             return <img className="img-faker" src={img_mesh} />;
         }
