@@ -47,7 +47,7 @@
         "gl-react-dom": "^4.0.1",
         "math": "^0.0.3",
         "react-app-rewired": "^2.1.5",
-        "three": "^0.114.0"
+        "three": "^0.125.0"
     },
     "browserslist": {
         "production": [
